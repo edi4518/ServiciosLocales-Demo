@@ -1,20 +1,20 @@
 import { Link } from 'react-router-dom';
-import { Award, ShieldCheck, DollarSign, Cpu, CheckCircle, ArrowRight, MessageCircle, Wrench, Zap } from 'lucide-react';
+import { Award, ShieldCheck, DollarSign, Cpu, CheckCircle, ArrowRight, MessageCircle, Wrench } from 'lucide-react';
 
 export default function Nosotros() {
   const pilares = [
     {
-      icon: <Award className="w-8 h-8 text-amber-500" />,
+      icon: <Award className="w-8 h-8 text-amber-500 group-hover:text-amber-400 transition-colors" />,
       titulo: 'Matrícula & Certificación',
       descripcion: 'Personal técnico calificado y matriculado formalmente ante ENRE, Metrogas y cámaras provinciales del sector eléctrico y de gas.'
     },
     {
-      icon: <DollarSign className="w-8 h-8 text-amber-500" />,
+      icon: <DollarSign className="w-8 h-8 text-amber-500 group-hover:text-amber-400 transition-colors" />,
       titulo: 'Presupuestos Transparentes',
-      descripcion: 'Cotizaciones claras y detalladas antes de iniciar cada labor. Sin cargos ocultos, adicionales de último momento ni sorpresas.'
+      descripcion: 'Cotizaciones claras y detalladas antes de iniciar cada labor. Sin costos ocultos, adicionales de último momento ni sorpresas.'
     },
     {
-      icon: <ShieldCheck className="w-8 h-8 text-amber-500" />,
+      icon: <ShieldCheck className="w-8 h-8 text-amber-500 group-hover:text-amber-400 transition-colors" />,
       titulo: 'Garantía Escrita de 6 Meses',
       descripcion: 'Respaldamos la calidad de nuestros materiales e intervenciones con una garantía formal por escrito en cada factura emitida.'
     }
@@ -101,7 +101,7 @@ export default function Nosotros() {
         </div>
       </section>
 
-      {/* Grilla de Valores / Pilares */}
+      {/* Grilla de Valores / Pilares con Hover Interactivo */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         <div className="text-center space-y-3">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white">Nuestros Pilares Fundamentales</h2>
@@ -114,19 +114,19 @@ export default function Nosotros() {
           {pilares.map((pilar, idx) => (
             <div
               key={idx}
-              className="bg-slate-900/80 border border-slate-800 p-8 rounded-2xl hover:border-amber-500/40 transition-all shadow-xl space-y-4"
+              className="bg-slate-900/90 border border-slate-800 p-8 rounded-2xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-amber-500/50 hover:shadow-2xl hover:shadow-amber-500/10 cursor-pointer group space-y-4"
             >
-              <div className="p-3 bg-slate-800 rounded-xl w-fit">
+              <div className="p-3 bg-slate-800/90 rounded-xl w-fit group-hover:scale-110 transition-transform">
                 {pilar.icon}
               </div>
-              <h3 className="text-xl font-bold text-white">{pilar.titulo}</h3>
+              <h3 className="text-xl font-bold text-white group-hover:text-amber-400 transition-colors">{pilar.titulo}</h3>
               <p className="text-slate-400 text-sm leading-relaxed">{pilar.descripcion}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Sección Equipo & Tecnología */}
+      {/* Sección Equipo & Tecnología con Hover Interactivo */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         <div className="text-center space-y-3">
           <div className="inline-flex items-center gap-2 text-xs font-bold text-amber-400 uppercase tracking-widest">
@@ -138,8 +138,11 @@ export default function Nosotros() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {tecnologia.map((tec, i) => (
-            <div key={i} className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-3">
-              <h4 className="text-lg font-bold text-amber-400">{tec.titulo}</h4>
+            <div
+              key={i}
+              className="bg-slate-900/90 border border-slate-800 p-8 rounded-2xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:border-amber-500/50 hover:shadow-2xl hover:shadow-amber-500/10 cursor-pointer group space-y-3"
+            >
+              <h4 className="text-lg font-bold text-amber-400 group-hover:text-amber-300 transition-colors">{tec.titulo}</h4>
               <p className="text-slate-300 text-sm leading-relaxed">{tec.desc}</p>
             </div>
           ))}
