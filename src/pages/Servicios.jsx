@@ -1,11 +1,19 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Zap, Wrench, Thermometer, Check } from 'lucide-react';
 
 export default function Servicios() {
+  const location = useLocation();
   const [categoriaActiva, setCategoriaActiva] = useState('Todos');
 
   const categorias = ['Todos', 'Electricidad', 'Plomería', 'Climatización'];
+
+  // Escuchar si proviene un estado de navegación interno (ej: desde Footer)
+  useEffect(() => {
+    if (location.state?.categoria) {
+      setCategoriaActiva(location.state.categoria);
+    }
+  }, [location.state]);
 
   const servicios = [
     {
@@ -140,7 +148,6 @@ export default function Servicios() {
           >
             <div className="space-y-4">
               
-              {/* Header de Tarjeta */}
               <div className="flex items-center justify-between">
                 <div className="p-3 bg-slate-800 rounded-xl group-hover:scale-110 transition-transform">
                   {srv.icon}
@@ -150,13 +157,11 @@ export default function Servicios() {
                 </span>
               </div>
 
-              {/* Título & Descripción */}
               <div>
                 <h3 className="text-xl font-bold text-white mb-2">{srv.titulo}</h3>
                 <p className="text-slate-400 text-sm leading-relaxed">{srv.descripcion}</p>
               </div>
 
-              {/* Lista de Tareas Cubiertas */}
               <div className="space-y-2 pt-2 border-t border-slate-800">
                 <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider block mb-1">
                   Incluye:
@@ -173,7 +178,6 @@ export default function Servicios() {
 
             </div>
 
-            {/* Footer de Tarjeta: Precio & Enlace */}
             <div className="pt-4 border-t border-slate-800 space-y-3">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-slate-400 font-medium">Precio estimado:</span>
@@ -182,6 +186,7 @@ export default function Servicios() {
 
               <Link
                 to="/presupuesto"
+                state={{ categoria: srv.categoria.toLowerCase(), servicioId: srv.id }}
                 className="bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200 w-full py-2.5 rounded-xl font-semibold transition-all text-center block mt-4"
               >
                 Pedir Presupuesto

@@ -1,14 +1,16 @@
-import { useState, useMemo } from 'react';
-import { Zap, Wrench, Thermometer, Send, Clock, ShieldCheck, Calculator, MapPin, AlertTriangle } from 'lucide-react';
+import { useState, useMemo, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Zap, Wrench, Thermometer, Send, Clock, ShieldCheck, Calculator, MapPin } from 'lucide-react';
 
 export default function Presupuesto() {
+  const location = useLocation();
+
   const [categoria, setCategoria] = useState('electricidad');
   const [servicioId, setServicioId] = useState('tablero');
-  const [urgencia, setUrgencia] = useState('normal'); // 'normal' | 'urgente'
+  const [urgencia, setUrgencia] = useState('normal');
   const [zona, setZona] = useState('caba');
   const [detalles, setDetalles] = useState('');
 
-  // Opciones de servicios por categoría
   const serviciosPorCategoria = {
     electricidad: [
       { id: 'tablero', nombre: 'Instalación / Readecuación de Tablero Eléctrico', precioBase: 25000 },
@@ -27,20 +29,41 @@ export default function Presupuesto() {
     ]
   };
 
-  // Ajustar servicio seleccionado si se cambia la categoría
+  // Preseleccionar campos automáticamente según location.state si se proviene de un enlace interno
+  useEffect(() => {
+    if (location.state?.categoria) {
+      const catNormalizada = location.state.categoria.toLowerCase();
+      if (serviciosPorCategoria[catNormalizada]) {
+        setCategoria(catNormalizada);
+        if (location.state?.servicioId) {
+          const existeServicio = serviciosPorCategoria[catNormalizada].some(s => s.id === location.state.servicioId);
+          if (existeServicio) {
+            setServicioId(location.state.servicioId);
+          } else {
+            setServicioId(serviciosPorCategoria[catNormalizada][0].id);
+          }
+        } else {
+          setServicioId(serviciosPorCategoria[catNormalizada][0].id);
+        }
+      }
+    }
+
+    if (location.state?.urgencia) {
+      setUrgencia(location.state.urgencia);
+    }
+  }, [location.state]);
+
   const handleCategoriaChange = (nuevaCategoria) => {
     setCategoria(nuevaCategoria);
     const primerServicio = serviciosPorCategoria[nuevaCategoria][0];
     setServicioId(primerServicio.id);
   };
 
-  // Servicio actual objeto
   const servicioActual = useMemo(() => {
     const lista = serviciosPorCategoria[categoria] || [];
     return lista.find(s => s.id === servicioId) || lista[0];
   }, [categoria, servicioId]);
 
-  // Tasas por zona
   const tasaVisitaZona = {
     caba: 0,
     zona_norte: 2500,
@@ -55,7 +78,6 @@ export default function Presupuesto() {
     zona_oeste: 'Zona Oeste (+$2.500 de visita)',
   };
 
-  // Cálculo en tiempo real
   const calculo = useMemo(() => {
     const base = servicioActual?.precioBase || 0;
     const recargoUrgencia = urgencia === 'urgente' ? Math.round(base * 0.20) : 0;
@@ -65,7 +87,6 @@ export default function Presupuesto() {
     return { base, recargoUrgencia, tasaZona, total };
   }, [servicioActual, urgencia, zona]);
 
-  // Generar link de WhatsApp
   const generarLinkWhatsApp = () => {
     const textoCategoria = categoria.toUpperCase();
     const textoServicio = servicioActual?.nombre;
@@ -92,7 +113,7 @@ export default function Presupuesto() {
   return (
     <div className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
       
-      {/* 1. Encabezado de la Sección */}
+      {/* 1. Encabezado */}
       <div className="text-center space-y-4 max-w-3xl mx-auto">
         <div className="bg-amber-500/10 text-amber-400 border border-amber-500/30 px-4 py-1 rounded-full text-xs font-semibold uppercase tracking-wider inline-flex items-center gap-2">
           <Calculator className="w-4 h-4 text-amber-400" />
@@ -108,13 +129,13 @@ export default function Presupuesto() {
         </p>
       </div>
 
-      {/* 3. Estructura de la Interfaz (Grid 2 columnas en desktop) */}
+      {/* Grid 2 columnas */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        {/* Columna Izquierda: Formulario de Selección */}
+        {/* Izquierda: Formulario */}
         <div className="lg:col-span-7 bg-slate-900/90 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-8 shadow-xl">
           
-          {/* Paso 1: Categoría del Servicio */}
+          {/* Paso 1 */}
           <div className="space-y-3">
             <label className="text-sm font-bold text-white uppercase tracking-wider block">
               Paso 1: Categoría del Servicio
@@ -161,7 +182,7 @@ export default function Presupuesto() {
             </div>
           </div>
 
-          {/* Paso 2: Tarea Específica */}
+          {/* Paso 2 */}
           <div className="space-y-3">
             <label className="text-sm font-bold text-white uppercase tracking-wider block">
               Paso 2: Tarea Específica a Realizar
@@ -179,14 +200,12 @@ export default function Presupuesto() {
             </select>
           </div>
 
-          {/* Paso 3: Nivel de Urgencia */}
+          {/* Paso 3 */}
           <div className="space-y-3">
             <label className="text-sm font-bold text-white uppercase tracking-wider block">
               Paso 3: Nivel de Urgencia
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              
-              {/* Opción Normal */}
               <div
                 onClick={() => setUrgencia('normal')}
                 className={`cursor-pointer p-4 rounded-xl border transition-all flex items-start space-x-3 ${
@@ -208,7 +227,6 @@ export default function Presupuesto() {
                 </div>
               </div>
 
-              {/* Opción Urgente */}
               <div
                 onClick={() => setUrgencia('urgente')}
                 className={`cursor-pointer p-4 rounded-xl border transition-all flex items-start space-x-3 relative overflow-hidden ${
@@ -235,11 +253,10 @@ export default function Presupuesto() {
                   <span className="text-xs text-amber-400 font-medium block mt-0.5">Llegada en &lt;30 min (+20% recargo)</span>
                 </div>
               </div>
-
             </div>
           </div>
 
-          {/* Paso 4: Zona de Cobertura & Detalles */}
+          {/* Paso 4 */}
           <div className="space-y-4">
             <div className="space-y-2">
               <label className="text-sm font-bold text-white uppercase tracking-wider block">
@@ -276,7 +293,7 @@ export default function Presupuesto() {
 
         </div>
 
-        {/* Columna Derecha: Tarjeta Resumen y Total Estimado */}
+        {/* Derecha: Resumen Sticky */}
         <div className="lg:col-span-5 bg-slate-900 border border-amber-500/30 p-8 rounded-2xl shadow-2xl space-y-6 sticky top-28">
           
           <div className="flex items-center justify-between pb-4 border-b border-slate-800">
@@ -284,7 +301,6 @@ export default function Presupuesto() {
             <ShieldCheck className="w-5 h-5 text-emerald-400" />
           </div>
 
-          {/* Desglose de Ítems */}
           <div className="space-y-3 text-sm text-slate-300">
             <div className="flex justify-between items-start py-2 border-b border-slate-800/80">
               <div>
@@ -309,7 +325,6 @@ export default function Presupuesto() {
             </div>
           </div>
 
-          {/* Total Estimado Destacado */}
           <div className="bg-slate-950 p-6 rounded-xl border border-slate-800 text-center space-y-2">
             <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">
               Total Estimado Calculado
@@ -322,7 +337,6 @@ export default function Presupuesto() {
             </p>
           </div>
 
-          {/* Botón de Acción Principal: Enviar a WhatsApp */}
           <div className="space-y-3 pt-2">
             <a
               href={generarLinkWhatsApp()}

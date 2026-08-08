@@ -2,14 +2,6 @@ import { Link } from 'react-router-dom';
 import { Wrench, MapPin, Phone, Clock, Mail } from 'lucide-react';
 
 export default function Footer() {
-  const serviciosPrincipales = [
-    { nombre: 'Electricidad Residencial e Industrial', path: '/servicios' },
-    { nombre: 'Plomería & Redes de Gas', path: '/servicios' },
-    { nombre: 'Climatización & Aire Acondicionado', path: '/servicios' },
-    { nombre: 'Atención de Urgencias 24/7', path: '/servicios' },
-    { nombre: 'Mantenimiento Preventivo', path: '/servicios' },
-  ];
-
   return (
     <footer className="bg-slate-950 text-slate-400 py-12 border-t border-slate-800 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -66,26 +58,62 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Columna 3: Servicios Principales Interactivos */}
+          {/* Columna 3: Servicios Principales Interactivos con Router State */}
           <div>
             <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">
               Servicios Principales
             </h3>
             <ul className="space-y-2.5 text-sm">
-              {serviciosPrincipales.map((srv, idx) => (
-                <li key={idx}>
-                  <Link
-                    to={srv.path}
-                    className="hover:text-amber-400 hover:translate-x-1 transition-all duration-200 inline-block text-slate-300"
-                  >
-                    {srv.nombre}
-                  </Link>
-                </li>
-              ))}
+              <li>
+                <Link
+                  to="/servicios"
+                  state={{ categoria: 'Electricidad' }}
+                  className="hover:text-amber-400 hover:translate-x-1 transition-all duration-200 inline-block text-slate-300"
+                >
+                  Electricidad Residencial e Industrial
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/servicios"
+                  state={{ categoria: 'Plomería' }}
+                  className="hover:text-amber-400 hover:translate-x-1 transition-all duration-200 inline-block text-slate-300"
+                >
+                  Plomería & Redes de Gas
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/servicios"
+                  state={{ categoria: 'Climatización' }}
+                  className="hover:text-amber-400 hover:translate-x-1 transition-all duration-200 inline-block text-slate-300"
+                >
+                  Climatización & Aire Acondicionado
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="https://wa.me/541155559999?text=Hola!%20Tengo%20una%20URGENCIA%20técnica%20y%20necesito%20asistencia"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-amber-400 hover:translate-x-1 transition-all duration-200 inline-block text-slate-300 font-medium"
+                >
+                  Atención de Urgencias 24/7
+                </a>
+              </li>
+              <li>
+                <Link
+                  to="/presupuesto"
+                  state={{ categoria: 'climatizacion', servicioId: 'mantenimiento' }}
+                  className="hover:text-amber-400 hover:translate-x-1 transition-all duration-200 inline-block text-slate-300"
+                >
+                  Mantenimiento Preventivo
+                </Link>
+              </li>
             </ul>
           </div>
 
-          {/* Columna 4: Datos de Contacto y Cobertura con Enlaces */}
+          {/* Columna 4: Datos de Contacto y Cobertura */}
           <div>
             <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">
               Contacto & Cobertura
